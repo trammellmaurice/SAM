@@ -6,7 +6,7 @@ import math
 import random
 
 # Set up camera input
-video = cv2.VideoCapture(0)
+video = cv2.VideoCapture(2)
 
 # Create MultiTracker object
 multiTracker = cv2.MultiTracker_create()
@@ -73,7 +73,7 @@ while video.isOpened():
     cv2.line(frame, (x,y-10), (x,y+10), (0,0,255), 2)
 
     target = None
-
+    shoot = False
     # draw rois on frame
     for index, newROI in enumerate(rois):
         if index == PRIMARY_TARGET:
@@ -86,9 +86,11 @@ while video.isOpened():
         if index == PRIMARY_TARGET:
             # draw boxes
             if  newROI[0] < x < newROI[0] + newROI[2] and newROI[1] < y < newROI[1] + newROI[3]:
+                shoot = True
                 cv2.rectangle(frame,p1,p2,(0,0,255), 2, 1)
                 LOCK-=1 # decrement lock for being on target
             else:
+                shoot = False
                 cv2.rectangle(frame,p1,p2,(255,0,0), 2, 1)
         else:
             #draw dots
@@ -99,9 +101,22 @@ while video.isOpened():
             thick = 2
             frame = cv2.circle(frame, (mx,my),radius,color, thick)
 
+    """
+    CALCULATIONS
+    """
+
     # calculate vector to target center
     vx = x - target[0]
     vy = y - target[1]
+
+    # message transmission
+    if shoot:
+        print([0])
+    else:
+        # up, left = + +
+        tx = 1 if vx > 0 else 0
+        ty = 1 if vy > 0 else 0
+        print([tx,ty])
 
     # draw vector on frame
     frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
