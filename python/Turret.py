@@ -133,7 +133,7 @@ if __name__ == '__main__':
         #     k = cv2.waitKey(1) & 0xff
         #     if k == 27 : break
         turret.detect_targets(img)
-        CYCLE = 200 * len(turret.target_queue.get_targets())
+        CYCLE = 100 * len(turret.target_queue.get_targets())
         # print(turret.target_queue._targets[0]._id)
         i = clock = 0
         current_target = None
