@@ -33,6 +33,10 @@ if not LOCAL:
     # Set up detection network default SSD-Mobilenet-V2
     net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.5)
 
+# read in a few frames
+for i in range(0,100):
+     ok, frame = video.read()
+
 """
 DETECT TARGETS
 """
@@ -44,7 +48,8 @@ if not LOCAL:
         # detection
         img = jetson.utils.cudaFromNumpy(frame)
         detections = net.Detect(img)
-        print(detections[0].ClassID)
+        if detections:
+            print(detections[0].Center)
     rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
     for roi in rois:
         multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
