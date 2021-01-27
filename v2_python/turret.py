@@ -94,7 +94,7 @@ while video.isOpened():
             #draw dots
             mx = round((p1[0]+p2[0])/2)
             my = round((p1[1]+p2[1])/2)
-            radius = 10
+            radius = 5
             color = (255,0,0)
             thick = 2
             frame = cv2.circle(frame, (mx,my),radius,color, thick)
