@@ -1,9 +1,10 @@
-TEST = True
+TEST = False
 ENGAGE_TIME = 30
 
 import cv2
 import math
 import random
+import sys
 
 # Detection libraries
 if not TEST:
@@ -12,12 +13,16 @@ if not TEST:
 
 # Set up camera input
 if not TEST:
-    video = cv2.VideoCapture(2)
+    video = cv2.VideoCapture(0)
 else:
     video = cv2.VideoCapture(0)
 
-# Create MultiTracker object
-multiTracker = cv2.MultiTracker_create()
+if not TEST:
+    # Create MultiTracker object
+    multiTracker = cv2.legacy.MultiTracker_create()
+else: 
+    # Create MultiTracker object
+    multiTracker = cv2.MultiTracker_create()
 
 # Exit if video not opened.
 if not video.isOpened():
