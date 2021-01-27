@@ -1,15 +1,18 @@
+TEST = True
+
 import cv2
 import math
 from Target_Queue import *
-from Detector import *
 from Banner import Banner
 
-
+if not TEST:
+    from Detector import *
 
 class Turret(object):
     def __init__(self):
         self.camera = cv2.VideoCapture(0)
-        self.detector = Detector(0.5,"ssd-mobilenet-v2")
+        if not TEST:
+            self.detector = Detector(0.5,"ssd-mobilenet-v2")
         self.target_queue = Target_Queue("Random")
         self.banner = Banner()
         self.banner.show()
@@ -30,13 +33,19 @@ class Turret(object):
     Method to detect targets and return list of detections
     """
     def detect_targets(self,frame):
-        #call detector scan
-        detections = self.detector.scan(frame)
-        #compare detections to targets
-        detections = self.compare_targets(detections)
-        #add leftover detections
-        for detection in detections:
-            self.target_queue.add_target(detection.ClassID,frame,(round(detection.Left),round(detection.Top),round(detection.Width),round(detection.Height)))
+        if not TEST:
+            #call detector scan
+            detections = self.detector.scan(frame)
+            #compare detections to targets
+            detections = self.compare_targets(detections)
+            #add leftover detections
+            for detection in detections:
+                self.target_queue.add_target(detection.ClassID,frame,(round(detection.Left),round(detection.Top),round(detection.Width),round(detection.Height)))
+        else:
+            # return a list of selected ROIs
+            rois = cv2.selectROIs('SELECT_ROI',frame,False)
+            for roi in rois:
+                self.target_queue.add_target(1,frame,(roi[0],roi[1],roi[2],roi[3]))
 
     """
     TRACK TARGETS

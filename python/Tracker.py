@@ -1,8 +1,8 @@
 import cv2
-
+TEST = True
 class Tracker(object):
     def __init__(self, frame, location):
-        self._model = cv2.legacy.TrackerMOSSE_create()
+        self._model = cv2.TrackerMOSSE_create() if TEST else cv2.legacy.TrackerMOSSE_create()
         ok = self._model.init(frame, location)
 
     """
