@@ -33,31 +33,31 @@ if not LOCAL:
     # Set up detection network default SSD-Mobilenet-V2
     net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.5)
 
-detections = []
-
-while not detections: # take and scan frames until detections or ROIs filled
+"""
+DETECT TARGETS
+"""
+if not LOCAL:
+    detections = []
+    while not detections:
+        # Read first frame.
+        ok, frame = video.read()
+        # detection
+        img = jetson.utils.cudaFromNumpy(frame)
+        detections = net.Detect(img)
+    rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
+    for roi in rois:
+        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
+else:
     # Read first frame.
     ok, frame = video.read()
     if not ok:
         print('Cannot read video file')
         sys.exit()
+    # Get ROIs manually for LOCALing
+    rois = cv2.selectROIs('SELECT_ROI',frame,False)
+    for roi in rois:
+        multiTracker.add(cv2.TrackerMOSSE_create(), frame, tuple(roi))
 
-    """
-    DETECT TARGETS
-    """
-    if not LOCAL:
-        # detection
-        img = jetson.utils.cudaFromNumpy(frame)
-        detections = net.Detect(img)
-        rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
-        for roi in rois:
-            multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
-    else:
-        # Get ROIs manually for LOCALing
-        rois = cv2.selectROIs('SELECT_ROI',frame,False)
-        for roi in rois:
-            multiTracker.add(cv2.TrackerMOSSE_create(), frame, tuple(roi))
-        break
 
 """
 TRACKING LOOP
