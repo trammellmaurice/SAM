@@ -5,8 +5,16 @@ import cv2
 import math
 import random
 
+# Detection libraries
+if not TEST:
+    import jetson.inference
+    import jetson.utils
+
 # Set up camera input
-video = cv2.VideoCapture(2)
+if not TEST:
+    video = cv2.VideoCapture(2)
+else:
+    video = cv2.VideoCapture(0)
 
 # Create MultiTracker object
 multiTracker = cv2.MultiTracker_create()
@@ -31,7 +39,11 @@ DETECT TARGETS
 """
 if not TEST:
     # detection
-    pass
+    img = jetson.utils.cudaFromNumpy(frame)
+    detections = net.Detect(img)
+    rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
+    for roi in rois:
+        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
 else:
     # Get ROIs manually for testing
     rois = cv2.selectROIs('SELECT_ROI',frame,False)
@@ -102,7 +114,7 @@ while video.isOpened():
             frame = cv2.circle(frame, (mx,my),radius,color, thick)
 
     """
-    CALCULATIONS
+    CALCULATIONS AND FEEDBACK
     """
 
     # calculate vector to target center
