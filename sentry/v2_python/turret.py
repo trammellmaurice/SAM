@@ -1,4 +1,4 @@
-TEST = False
+LOCAL = False
 ENGAGE_TIME = 30
 
 import cv2
@@ -7,20 +7,20 @@ import random
 import sys
 
 # Detection libraries
-if not TEST:
+if not LOCAL:
     import jetson.inference
     import jetson.utils
 
 # Set up camera input
-if not TEST:
+if not LOCAL:
     video = cv2.VideoCapture(0)
 else:
     video = cv2.VideoCapture(0)
 
-if not TEST:
+if not LOCAL:
     # Create MultiTracker object
     multiTracker = cv2.legacy.MultiTracker_create()
-else: 
+else:
     # Create MultiTracker object
     multiTracker = cv2.MultiTracker_create()
 
@@ -29,7 +29,7 @@ if not video.isOpened():
     print("Could not open video")
     sys.exit()
 
-if not TEST:
+if not LOCAL:
     # Set up detection network default SSD-Mobilenet-V2
     net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.5)
 
@@ -42,7 +42,7 @@ if not ok:
 """
 DETECT TARGETS
 """
-if not TEST:
+if not LOCAL:
     # detection
     img = jetson.utils.cudaFromNumpy(frame)
     detections = net.Detect(img)
@@ -50,7 +50,7 @@ if not TEST:
     for roi in rois:
         multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
 else:
-    # Get ROIs manually for testing
+    # Get ROIs manually for LOCALing
     rois = cv2.selectROIs('SELECT_ROI',frame,False)
     for roi in rois:
         multiTracker.add(cv2.TrackerMOSSE_create(), frame, tuple(roi))
