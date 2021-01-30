@@ -1,4 +1,4 @@
-LOCAL = False
+LOCAL = True
 ENGAGE_TIME = 30
 
 import cv2
@@ -33,27 +33,31 @@ if not LOCAL:
     # Set up detection network default SSD-Mobilenet-V2
     net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.5)
 
-# Read first frame.
-ok, frame = video.read()
-if not ok:
-    print('Cannot read video file')
-    sys.exit()
+detections = []
 
-"""
-DETECT TARGETS
-"""
-if not LOCAL:
-    # detection
-    img = jetson.utils.cudaFromNumpy(frame)
-    detections = net.Detect(img)
-    rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
-    for roi in rois:
-        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
-else:
-    # Get ROIs manually for LOCALing
-    rois = cv2.selectROIs('SELECT_ROI',frame,False)
-    for roi in rois:
-        multiTracker.add(cv2.TrackerMOSSE_create(), frame, tuple(roi))
+while not detections: # take and scan frames until detections or ROIs filled
+    # Read first frame.
+    ok, frame = video.read()
+    if not ok:
+        print('Cannot read video file')
+        sys.exit()
+
+    """
+    DETECT TARGETS
+    """
+    if not LOCAL:
+        # detection
+        img = jetson.utils.cudaFromNumpy(frame)
+        detections = net.Detect(img)
+        rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
+        for roi in rois:
+            multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
+    else:
+        # Get ROIs manually for LOCALing
+        rois = cv2.selectROIs('SELECT_ROI',frame,False)
+        for roi in rois:
+            multiTracker.add(cv2.TrackerMOSSE_create(), frame, tuple(roi))
+        break
 
 """
 TRACKING LOOP
@@ -139,11 +143,11 @@ while video.isOpened():
     frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
 
     # Display FPS on frame
-    cv2.putText(frame, "FPS : " + str(int(fps)), (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
+    cv2.putText(frame, "FPS : " + str(int(fps)), (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0,0,0), 2)
 
     # Display vector
-    cv2.putText(frame, "MOVDIR X : " + str(int(vx)), (50,100), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
-    cv2.putText(frame, "MOVDIR Y : " + str(int(vy)), (50,150), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
+    cv2.putText(frame, "MOVDIR X : " + str(int(vx)), (50,100), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0,0,0), 2)
+    cv2.putText(frame, "MOVDIR Y : " + str(int(vy)), (50,150), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0,0,0), 2)
 
     # show frame
     cv2.imshow('TURRET',frame)
