@@ -44,6 +44,7 @@ if not LOCAL:
         # detection
         img = jetson.utils.cudaFromNumpy(frame)
         detections = net.Detect(img)
+        print(detections[0].ClassID)
     rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
     for roi in rois:
         multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
