@@ -1,4 +1,4 @@
-LOCAL = True
+LOCAL = False
 ENGAGE_TIME = 30
 
 import cv2
