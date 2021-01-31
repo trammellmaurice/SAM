@@ -1,4 +1,4 @@
-LOCAL = True
+LOCAL = False
 ENGAGE_TIME = 30
 REDETECT_TIME = 50
 
@@ -52,7 +52,7 @@ while video.isOpened():
             img = jetson.utils.cudaFromNumpy(frame)
             detections = net.Detect(img)
             if detections and len(detections) > 3:
-                detections = detections[0:3]    
+                detections = detections[0:3]
         rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
         for roi in rois:
             multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
