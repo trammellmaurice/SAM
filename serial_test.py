@@ -1,3 +1,3 @@
 import serial
-ser = serial.Serial('/dev/ttyUSB0')
-print(ser.name) 
+arduino = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+arduino.println(1)

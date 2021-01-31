@@ -143,12 +143,12 @@ while video.isOpened():
 
         # message transmission
         if shoot:
-            print([0])
+            print([0,0,1])
         else:
             # up, left = + +
-            tx = 1 if vx > 0 else 0
-            ty = 1 if vy > 0 else 0
-            print([tx,ty])
+            tx = 1 if vx > 0 else 2
+            ty = 1 if vy > 0 else 2
+            print([tx,ty,0])
 
         # draw vector on frame
         frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
