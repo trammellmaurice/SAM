@@ -51,8 +51,8 @@ while video.isOpened():
             # detection
             img = jetson.utils.cudaFromNumpy(frame)
             detections = net.Detect(img)
-            if detections:
-                print(detections[0].Center)
+            if detections and len(detections) > 3:
+                detections = detections[0:3]    
         rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
         for roi in rois:
             multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
