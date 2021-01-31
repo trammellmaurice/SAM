@@ -1,6 +1,6 @@
 LOCAL = False
 ENGAGE_TIME = 30
-REDETECT_TIME = 50
+REDETECT_TIME = 120
 
 import cv2
 import math
@@ -53,7 +53,7 @@ while video.isOpened():
             detections = net.Detect(img)
             if detections and len(detections) > 3:
                 detections = detections[0:3]
-        rois = [(detection.Left,detection.Right,detection.Width,detection.Height) for detection in detections]
+        rois = [(detection.Left,detection.Top,detection.Width,detection.Height) for detection in detections]
         for roi in rois:
             multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
     else:
@@ -153,11 +153,11 @@ while video.isOpened():
         frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
 
         # Display FPS on frame
-        cv2.putText(frame, "FPS : " + str(int(fps)), (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0,0,0), 2)
+        cv2.putText(frame, "FPS : " + str(int(fps)), (50,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255,255,255), 2)
 
         # Display vector
-        cv2.putText(frame, "MOVDIR X : " + str(int(vx)), (50,100), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0,0,0), 2)
-        cv2.putText(frame, "MOVDIR Y : " + str(int(vy)), (50,150), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0,0,0), 2)
+        cv2.putText(frame, "MOVDIR X : " + str(int(vx)), (50,100), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255,255,255), 2)
+        cv2.putText(frame, "MOVDIR Y : " + str(int(vy)), (50,150), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255,255,255), 2)
 
         # show frame
         cv2.imshow('TURRET',frame)
