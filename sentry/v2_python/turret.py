@@ -56,7 +56,7 @@ while video.isOpened():
         rois = [(detection.Left,detection.Top,detection.Width,detection.Height) for detection in detections]
         for roi in rois:
             # multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
-            multiTracker.add(cv2.legacy.TrackerCSRT_create(), frame, tuple(roi))
+            multiTracker.add(cv2.legacy.TrackerKCF_create(), frame, tuple(roi))
     else:
         # Read first frame.
         ok, frame = video.read()
