@@ -152,7 +152,7 @@ while video.isOpened():
         # message transmission
         if shoot:
             GPIO.output(FIRE,GPIO.HIGH)
-            time.sleep(0.1)
+            
 
 
         # up, left = + +
