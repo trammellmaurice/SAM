@@ -1,6 +1,6 @@
 LOCAL = False
 ENGAGE_TIME = 30
-REDETECT_TIME = 120
+REDETECT_TIME = 60
 
 import cv2
 import math
