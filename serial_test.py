@@ -8,16 +8,16 @@ GPIO.setmode(GPIO.BOARD)
 #12 = up
 # 13 = fire
 # setup channel
-channels = [7,11,12,13]
+channels = [7,12,13,19,21]
 
-DOWN, UP, FIRE = 7,12,13
-GPIO.setup(FIRE,GPIO.OUT,initial=GPIO.LOW)  
+DOWN, UP, FIRE,RIGHT,LEFT = 7,12,13,19,21
+GPIO.setup(channels,GPIO.OUT,initial=GPIO.LOW)  
 
 
-GPIO.output(FIRE,GPIO.HIGH)
+GPIO.output(UP,GPIO.HIGH)
 
-time.sleep(0.5)
+time.sleep(0.1)
 
-GPIO.output(FIRE,GPIO.LOW)
+GPIO.output(UP,GPIO.LOW)
 
 GPIO.cleanup()
