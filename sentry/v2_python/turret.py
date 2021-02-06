@@ -153,6 +153,7 @@ while video.isOpened():
         if shoot:
             GPIO.output(FIRE,GPIO.HIGH)
             time.sleep(0.1)
+            GPIO.output(FIRE,GPIO.LOW)
         else:
             # up, left = + +
             GPIO.output(LEFT,GPIO.HIGH) if vx > 0 else GPIO.output(RIGHT,GPIO.HIGH)
