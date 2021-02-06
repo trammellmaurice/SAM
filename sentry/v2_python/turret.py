@@ -153,7 +153,7 @@ while video.isOpened():
         if shoot:
             GPIO.output(FIRE,GPIO.HIGH)
             time.sleep(0.1)
-            GPIO.output(FIRE,GPIO.LOW)
+
         else:
             # up, left = + +
             GPIO.output(LEFT,GPIO.HIGH) if vx > 0 else GPIO.output(RIGHT,GPIO.HIGH)
@@ -161,7 +161,8 @@ while video.isOpened():
             time.sleep(0.1)
 
         GPIO.output(ALL,GPIO.LOW)
-
+        time.sleep(0.1)
+        
         # draw vector on frame
         frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
 
