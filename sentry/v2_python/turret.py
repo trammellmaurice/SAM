@@ -11,6 +11,10 @@ import sys
 if not LOCAL:
     import jetson.inference
     import jetson.utils
+    import Jetson.GPIO as GPIO
+    import time
+    # pin definitions
+    GPIO.setmode(GPIO.BOARD)
 
 # Set up camera input
 if not LOCAL:
@@ -28,6 +32,10 @@ if not video.isOpened():
 if not LOCAL:
     # Set up detection network default SSD-Mobilenet-V2
     net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.5)
+    # set up GPIO
+    ALL = [7,12,13,19,21]
+    DOWN, UP, FIRE, RIGHT, LEFT= 7,12,13,19,21
+    GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
 
 # read in a few frames
 for i in range(0,100):
@@ -143,12 +151,15 @@ while video.isOpened():
 
         # message transmission
         if shoot:
-            print([0,0,1])
+            GPIO.output(FIRE,GPIO.HIGH)
+            time.sleep(0.5)
         else:
             # up, left = + +
-            tx = 1 if vx > 0 else 2
-            ty = 1 if vy > 0 else 2
-            print([tx,ty,0])
+            GPIO.output(LEFT,GPIO.HIGH) if vx > 0 else GPIO.output(RIGHT,GPIO.HIGH)
+            GPIO.output(UP,GPIO.HIGH) if vy > 0 else GPIO.output(DOWN,GPIO.HIGH)
+            time.sleep(0.5)
+
+        GPIO.output(ALL,GPIO.LOW)
 
         # draw vector on frame
         frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
