@@ -177,4 +177,5 @@ while video.isOpened():
         CLOCK-=1
         # quit on ESC
         if cv2.waitKey(1) & 0xFF == 27:
+            GPIO.cleanup()
             sys.exit()
