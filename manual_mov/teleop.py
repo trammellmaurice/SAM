@@ -2,6 +2,7 @@ from inputs import get_gamepad
 import cv2
 import Jetson.GPIO as GPIO
 import time
+import sys
 
 ARMED = False
 SAM = True
