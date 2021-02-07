@@ -40,5 +40,5 @@ while 1:
                     else:
                         print("MUST ARM")
                 time.sleep(0.01)
-    except UnknownEventCode:
+    except KeyError:
         pass
