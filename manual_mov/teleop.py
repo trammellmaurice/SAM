@@ -27,8 +27,8 @@ for i in range(0,10):
      ok, frame = video.read()
 
 while video.isOpened():
-    # GPIO.output(ALL,GPIO.LOW)
-    # time.sleep(0.01)
+    GPIO.output(ALL,GPIO.LOW)
+    time.sleep(0.01)
     try:
         events = get_gamepad()
     except:
@@ -43,7 +43,7 @@ while video.isOpened():
             SAM = True
             print("SAM CONTROL ENGAGE")
         if not SAM:
-             if event.code == "BTN_DEAD" and event.state == 1:
+            if event.code == "BTN_DEAD" and event.state == 1:
                 if not ARMED:
                     ARMED = True
                     print("ARMED")
