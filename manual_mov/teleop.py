@@ -1,4 +1,4 @@
-from inputs
+import inputs
 import cv2
 import Jetson.GPIO as GPIO
 import time
