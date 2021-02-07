@@ -1,4 +1,18 @@
 from inputs import get_gamepad
+import Jetson.GPIO as GPIO
+import time
+import sys
+
+ARMED = False
+SAM = True
+
+# pin definitions
+GPIO.setmode(GPIO.BOARD)
+
+# set up GPIO
+ALL = [7,12,13,19,21]
+DOWN, UP, FIRE, RIGHT, LEFT= 7,12,13,19,21
+GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
 
 while 1:
     events = get_gamepad()
