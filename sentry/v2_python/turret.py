@@ -37,7 +37,7 @@ if not LOCAL:
     GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
 
 # read in a few frames
-for i in range(0,100):
+for i in range(0,10):
      ok, frame = video.read()
 
 while video.isOpened():
