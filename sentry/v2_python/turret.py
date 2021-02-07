@@ -1,4 +1,4 @@
-LOCAL = True
+LOCAL = False
 ENGAGE_TIME = 30
 REDETECT_TIME = 100
 
@@ -160,7 +160,7 @@ while video.isOpened():
                 GPIO.output(FIRE,GPIO.HIGH)
 
             # up, left = + +
-            GPIO.outt(LEFT,GPIO.HIGH) if vx > 0 else GPIO.output(RIGHT,GPIO.HIGH)
+            GPIO.output(LEFT,GPIO.HIGH) if vx > 0 else GPIO.output(RIGHT,GPIO.HIGH)
             GPIO.output(UP,GPIO.HIGH) if vy > 0 else GPIO.output(DOWN,GPIO.HIGH)
             time.sleep(0.01)
 
