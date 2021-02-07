@@ -1,12 +1,12 @@
-LOCAL = False
+LOCAL = True
 ENGAGE_TIME = 30
-REDETECT_TIME = 60
-ERROR = 10
+REDETECT_TIME = 100
 
 import cv2
 import math
 import random
 import sys
+import numpy as np
 
 # Detection libraries
 if not LOCAL:
@@ -22,8 +22,6 @@ if not LOCAL:
     video = cv2.VideoCapture(0)
 else:
     video = cv2.VideoCapture(0)
-
-
 
 # Exit if video not opened.
 if not video.isOpened():
@@ -86,9 +84,6 @@ while video.isOpened():
     LOCK = ENGAGE_TIME
     CLOCK = REDETECT_TIME
 
-
-    LAST_PRIMARY_ROI = rois[PRIMARY_TARGET] # variable to save and compare last ROI
-
     while video.isOpened() and CLOCK > 1:
         ok, frame = video.read()
         if not ok:
@@ -105,13 +100,7 @@ while video.isOpened():
 
         # get updated rois
         ok, rois = multiTracker.update(frame)
-        if LAST_PRIMARY_ROI == rois[PRIMARY_TARGET]:
-            # count DOWN
-            ERROR -= 1
-            if ERROR == 0:
-                CLOCK = 0
-        else:
-            ERROR = 10
+
 
         # Calculate Frames per second (FPS)
         fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
@@ -126,6 +115,11 @@ while video.isOpened():
         target = None
         shoot = False
         # draw rois on frame
+
+        if not ok:
+            CLOCK = 0
+            break
+
         for index, newROI in enumerate(rois):
             if index == PRIMARY_TARGET:
                 p1 = (int(newROI[0]), int(newROI[1]))
@@ -161,18 +155,26 @@ while video.isOpened():
         vy = y - target[1]
 
         # message transmission
-        if shoot:
-            GPIO.output(FIRE,GPIO.HIGH)
+        if not LOCAL:
+            if shoot:
+                GPIO.output(FIRE,GPIO.HIGH)
 
+            # up, left = + +
+            GPIO.outt(LEFT,GPIO.HIGH) if vx > 0 else GPIO.output(RIGHT,GPIO.HIGH)
+            GPIO.output(UP,GPIO.HIGH) if vy > 0 else GPIO.output(DOWN,GPIO.HIGH)
+            time.sleep(0.01)
 
+            GPIO.output(ALL,GPIO.LOW)
+            time.sleep(0.01)
 
-        # up, left = + +
-        GPIO.outt(LEFT,GPIO.HIGH) if vx > 0 else GPIO.output(RIGHT,GPIO.HIGH)
-        GPIO.output(UP,GPIO.HIGH) if vy > 0 else GPIO.output(DOWN,GPIO.HIGH)
-        time.sleep(0.1)
+        else:
+            if shoot:
+                print("FIRE")
 
-        GPIO.output(ALL,GPIO.LOW)
-        time.sleep(0.1)
+            # up, left = + +
+            print("LEFT") if vx > 0 else print("RIGHT")
+            print("UP") if vy > 0 else print("DOWN")
+
 
         # draw vector on frame
         frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
