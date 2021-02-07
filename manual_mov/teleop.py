@@ -15,7 +15,7 @@ ALL = [7,12,13,19,21]
 DOWN, UP, FIRE, RIGHT, LEFT= 7,12,13,19,21
 GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
 
-video = cv2.VideoCapture(0)
+video = cv2.VideoCapture(1)
 
 # Exit if video not opened.
 if not video.isOpened():
@@ -34,8 +34,6 @@ while video.isOpened():
     except:
         pass
     for event in events:
-        if event.ev_type != "Sync" and event.ev_type != "Absolute":
-            print(event.ev_type, event.code, event.state)
         if event.code == "BTN_BASE3" and event.state == 1:
             SAM = False
             print("MANUAL CONTROL ENGAGE")

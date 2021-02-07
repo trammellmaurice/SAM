@@ -19,7 +19,7 @@ if not LOCAL:
 
 # Set up camera input
 if not LOCAL:
-    video = cv2.VideoCapture(0)
+    video = cv2.VideoCapture(1)
 else:
     video = cv2.VideoCapture(0)
 
