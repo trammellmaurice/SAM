@@ -15,7 +15,7 @@ ALL = [7,12,13,19,21]
 DOWN, UP, FIRE, RIGHT, LEFT= 7,12,13,19,21
 GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
 
-video = cv2.VideoCapture(1)
+video = cv2.VideoCapture(0)
 
 # Exit if video not opened.
 if not video.isOpened():
