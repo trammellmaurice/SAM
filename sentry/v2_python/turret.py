@@ -1,6 +1,7 @@
 LOCAL = False
 ENGAGE_TIME = 30
 REDETECT_TIME = 60
+ERROR = 10
 
 import cv2
 import math
@@ -85,6 +86,9 @@ while video.isOpened():
     LOCK = ENGAGE_TIME
     CLOCK = REDETECT_TIME
 
+
+    LAST_PRIMARY_ROI = rois[PRIMARY_TARGET] # variable to save and compare last ROI
+
     while video.isOpened() and CLOCK > 1:
         ok, frame = video.read()
         if not ok:
@@ -101,6 +105,13 @@ while video.isOpened():
 
         # get updated rois
         ok, rois = multiTracker.update(frame)
+        if LAST_PRIMARY_ROI == rois[PRIMARY_TARGET]:
+            # count DOWN
+            ERROR -= 1
+            if ERROR == 0:
+                CLOCK = 0
+        else:
+            ERROR = 10
 
         # Calculate Frames per second (FPS)
         fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
@@ -152,7 +163,7 @@ while video.isOpened():
         # message transmission
         if shoot:
             GPIO.output(FIRE,GPIO.HIGH)
-            
+
 
 
         # up, left = + +
