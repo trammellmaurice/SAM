@@ -28,7 +28,10 @@ for i in range(0,10):
 while video.isOpened():
     # GPIO.output(ALL,GPIO.LOW)
     # time.sleep(0.01)
-    events = get_gamepad()
+    try:
+        events = get_gamepad()
+    except:
+        pass
     for event in events:
         if event.ev_type != "Sync" and event.ev_type != "Absolute":
             print(event.ev_type, event.code, event.state)
