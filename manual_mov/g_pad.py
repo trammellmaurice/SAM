@@ -1,4 +1,4 @@
-import inputs
+from inputs import get_gamepad
 
 while 1:
     events = get_gamepad()

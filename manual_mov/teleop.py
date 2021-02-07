@@ -1,4 +1,4 @@
-import inputs
+from inputs import get_gamepad
 import cv2
 import Jetson.GPIO as GPIO
 import time
