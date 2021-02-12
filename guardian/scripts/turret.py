@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 LOCAL = False
-ENGAGE_TIME = 30
-REDETECT_TIME = 100
+ENGAGE_TIME = 50
+REDETECT_TIME = 200
 
 import cv2
 import math
@@ -8,18 +9,19 @@ import random
 import sys
 import numpy as np
 
+import rospy
+from std_msgs.msg import String
+
 # Detection libraries
 if not LOCAL:
     import jetson.inference
     import jetson.utils
-    import Jetson.GPIO as GPIO
     import time
-    # pin definitions
-    GPIO.setmode(GPIO.BOARD)
 
 # Set up camera input
 if not LOCAL:
-    video = cv2.VideoCapture(1)
+    video = cv2.VideoCapture(0)
+
 else:
     video = cv2.VideoCapture(0)
 
@@ -31,10 +33,10 @@ if not video.isOpened():
 if not LOCAL:
     # Set up detection network default SSD-Mobilenet-V2
     net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.5)
-    # set up GPIO
-    ALL = [7,12,13,19,21]
-    DOWN, UP, FIRE, RIGHT, LEFT= 7,12,13,19,21
-    GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
+    # set up publisher
+    pub = rospy.Publisher('auto',String,queue_size=1)
+    rospy.init_node('jetson_ai',anonymous=True)
+    rate = rospy.Rate(100)
 
 # read in a few frames
 for i in range(0,10):
@@ -155,25 +157,33 @@ while video.isOpened():
         vy = y - target[1]
 
         # message transmission
-        if not LOCAL:
-            if shoot:
-                GPIO.output(FIRE,GPIO.HIGH)
+        if shoot:
+            rospy.loginfo("FIRE")
+            pub.publish("FIRE")
+            rate.sleep()
+            pub.publish("FSTOP")
 
-            # up, left = + +
-            GPIO.output(LEFT,GPIO.HIGH) if vx > 0 else GPIO.output(RIGHT,GPIO.HIGH)
-            GPIO.output(UP,GPIO.HIGH) if vy > 0 else GPIO.output(DOWN,GPIO.HIGH)
-            time.sleep(0.01)
-
-            GPIO.output(ALL,GPIO.LOW)
-            time.sleep(0.01)
-
+        # up, left = + +
+        if vx > 0:
+            rospy.loginfo("LEFT")
+            pub.publish("LEFT")  
+            rate.sleep()
+            pub.publish("LSTOP")
         else:
-            if shoot:
-                print("FIRE")
-
-            # up, left = + +
-            print("LEFT") if vx > 0 else print("RIGHT")
-            print("UP") if vy > 0 else print("DOWN")
+            rospy.loginfo("RIGHT")
+            pub.publish("RIGHT")  
+            rate.sleep()
+            pub.publish("RSTOP")
+        if vy > 0:
+            rospy.loginfo("UP")
+            pub.publish("UP")
+            rate.sleep()  
+            pub.publish("USTOP")
+        else: 
+            rospy.loginfo("DOWN")
+            pub.publish("DOWN")
+            rate.sleep()
+            pub.publish("DSTOP")  
 
 
         # draw vector on frame
@@ -191,5 +201,4 @@ while video.isOpened():
         CLOCK-=1
         # quit on ESC
         if cv2.waitKey(1) & 0xFF == 27:
-            GPIO.cleanup()
             sys.exit()
