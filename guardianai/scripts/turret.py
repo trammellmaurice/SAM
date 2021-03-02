@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 LOCAL = False
-ENGAGE_TIME = 50
-REDETECT_TIME = 200
+ENGAGE_TIME = 20
+REDETECT_TIME = 100
 
 import cv2
 import math
@@ -32,11 +32,11 @@ if not video.isOpened():
 
 if not LOCAL:
     # Set up detection network default SSD-Mobilenet-V2
-    net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.5)
+    net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.4)
     # set up publisher
     pub = rospy.Publisher('auto',String,queue_size=1)
     rospy.init_node('jetson_ai',anonymous=True)
-    rate = rospy.Rate(100)
+    rate = rospy.Rate(75)
 
 # read in a few frames
 for i in range(0,10):
@@ -54,7 +54,15 @@ while video.isOpened():
     """
     if not LOCAL:
         detections = []
+        init_time = time.time()
         while not detections:
+            # time for checking signals            
+            current_time = time.time()
+            if (current_time-init_time) > 10:
+                rospy.loginfo("CHECKIN")
+                pub.publish("AUTOPILOT OPERATIONAL")  
+                init_time = time.time()
+        
             # Read first frame.
             ok, frame = video.read()
             # detection
@@ -62,10 +70,18 @@ while video.isOpened():
             detections = net.Detect(img)
             if detections and len(detections) > 3:
                 detections = detections[0:3]
+             # show frame
+            cv2.imshow('TURRET',frame)
+
+            # quit on ESC
+            if cv2.waitKey(1) & 0xFF == 27:
+                sys.exit()
+
         rois = [(detection.Left,detection.Top,detection.Width,detection.Height) for detection in detections]
+           
         for roi in rois:
             multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
-            # multiTracker.add(cv2.legacy.TrackerKCF_create(), frame, tuple(roi))
+            #multiTracker.add(cv2.legacy.TrackerKCF_create(), frame, tuple(roi))
     else:
         # Read first frame.
         ok, frame = video.read()
@@ -116,6 +132,9 @@ while video.isOpened():
 
         target = None
         shoot = False
+
+
+
         # draw rois on frame
 
         if not ok:
@@ -164,27 +183,31 @@ while video.isOpened():
             pub.publish("FSTOP")
 
         # up, left = + +
-        if vx > 0:
+        if vx > 10:
             rospy.loginfo("LEFT")
             pub.publish("LEFT")  
             rate.sleep()
-            pub.publish("LSTOP")
-        else:
+            pub.publish("LSTOP") 
+            
+        elif vx < -10:
             rospy.loginfo("RIGHT")
             pub.publish("RIGHT")  
             rate.sleep()
-            pub.publish("RSTOP")
-        if vy > 0:
+            pub.publish("RSTOP")  
+
+        if vy > 10:    
             rospy.loginfo("UP")
             pub.publish("UP")
-            rate.sleep()  
-            pub.publish("USTOP")
-        else: 
+            rate.sleep()
+            pub.publish("USTOP") 
+
+        elif vy < -10: 
             rospy.loginfo("DOWN")
             pub.publish("DOWN")
             rate.sleep()
-            pub.publish("DSTOP")  
+            pub.publish("DSTOP") 
 
+ 
 
         # draw vector on frame
         frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
