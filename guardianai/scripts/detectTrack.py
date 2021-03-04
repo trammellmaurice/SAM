@@ -31,8 +31,8 @@ def crosshair(frame):
     height, width, channels = frame.shape
 
     # DRAW CROSSHAIR ON FRAME
-    x = round(width/2)
-    y = round(height/2)
+    x = int(round(width/2))
+    y = int(round(height/2))
     cv2.line(frame, (x-10,y), (x+10,y), (0,0,255), 2)
     cv2.line(frame, (x,y-10), (x,y+10), (0,0,255), 2)
 
