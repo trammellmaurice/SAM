@@ -127,7 +127,7 @@ while video.isOpened():
     frame = crosshair(frame)
 
     # GET CORNER POINTS FOR BOXES
-    for newROI in enumerate(rois):
+    for newROI in rois:
         p1 = (int(newROI[0]), int(newROI[1]))
         p2 = (int(newROI[0] + newROI[2]), int(newROI[1] + newROI[3]))
         cv2.rectangle(frame,p1,p2,(255,0,0), 2, 1)
