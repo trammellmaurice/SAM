@@ -9,7 +9,12 @@ import time
 import math
 import random
 
+sys.path.remove('/opt/ros/melodic/lib/python2.7/dist-packages') # in order to import cv2 under python3
+
 import cv2
+
+sys.path.append('/opt/ros/melodic/lib/python2.7/dist-packages') # append back in order to import rospy
+
 import numpy as np
 
 import rospy
