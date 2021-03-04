@@ -56,13 +56,13 @@ while video.isOpened():
         detections = []
         init_time = time.time()
         while not detections:
-            # time for checking signals            
+            # time for checking signals
             current_time = time.time()
             if (current_time-init_time) > 10:
                 rospy.loginfo("CHECKIN")
-                pub.publish("AUTOPILOT OPERATIONAL")  
+                pub.publish("AUTOPILOT OPERATIONAL")
                 init_time = time.time()
-        
+
             # Read first frame.
             ok, frame = video.read()
             # detection
@@ -78,7 +78,7 @@ while video.isOpened():
                 sys.exit()
 
         rois = [(detection.Left,detection.Top,detection.Width,detection.Height) for detection in detections]
-           
+
         for roi in rois:
             multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
             #multiTracker.add(cv2.legacy.TrackerKCF_create(), frame, tuple(roi))
@@ -185,29 +185,19 @@ while video.isOpened():
         # up, left = + +
         if vx > 10:
             rospy.loginfo("LEFT")
-            pub.publish("LEFT")  
-            rate.sleep()
-            pub.publish("LSTOP") 
-            
+            pub.publish("LEFT")
+
         elif vx < -10:
             rospy.loginfo("RIGHT")
-            pub.publish("RIGHT")  
-            rate.sleep()
-            pub.publish("RSTOP")  
+            pub.publish("RIGHT")
 
-        if vy > 10:    
+        if vy > 10:
             rospy.loginfo("UP")
             pub.publish("UP")
-            rate.sleep()
-            pub.publish("USTOP") 
 
-        elif vy < -10: 
+        elif vy < -10:
             rospy.loginfo("DOWN")
-            pub.publish("DOWN")
-            rate.sleep()
-            pub.publish("DSTOP") 
-
- 
+            pub.publish("DOWN") 
 
         # draw vector on frame
         frame = cv2.line(frame,(x,y),(target[0],target[1]),(0,0,255),2)
