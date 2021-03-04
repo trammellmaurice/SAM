@@ -98,7 +98,7 @@ DETECT TARGETS
 while video.isOpened():
 
     # CREATE A NEW, EMPTY MULTITRACKER
-    multiTracker = cv2.legacy.MultiTracker_create()
+    multiTracker = cv2.MultiTracker_create()
 
     # DETECT TARGETS AND RETURN LIST
     detections = detect()
@@ -108,32 +108,33 @@ while video.isOpened():
 
     # ADD ROIS TO MULTI TRACKER
     for roi in rois:
-        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
+        multiTracker.add(cv2.TrackerMOSSE_create(), frame, tuple(roi))
 
     """
     TRACK TARGETS
     """
     PRIMARY_TARGET = 0
 
-    # READ NEW FRAMES
-    ok, frame = video.read()
-    if not ok:
-        break
+    while video.isOpened():
+        # READ NEW FRAMES
+        ok, frame = video.read()
+        if not ok:
+            break
 
-    # UPDATE TRACKERS
-    ok, rois = multiTracker.update(frame)
+        # UPDATE TRACKERS
+        ok, rois = multiTracker.update(frame)
 
-    # DRAW CROSSHAIR
-    frame = crosshair(frame)
+        # DRAW CROSSHAIR
+        frame = crosshair(frame)
 
-    # GET CORNER POINTS FOR BOXES
-    for newROI in rois:
-        p1 = (int(newROI[0]), int(newROI[1]))
-        p2 = (int(newROI[0] + newROI[2]), int(newROI[1] + newROI[3]))
-        cv2.rectangle(frame,p1,p2,(255,0,0), 2, 1)
+        # GET CORNER POINTS FOR BOXES
+        for newROI in rois:
+            p1 = (int(newROI[0]), int(newROI[1]))
+            p2 = (int(newROI[0] + newROI[2]), int(newROI[1] + newROI[3]))
+            cv2.rectangle(frame,p1,p2,(255,0,0), 2, 1)
 
-    # DISPLAY FRAME
-    cv2.imshow('TURRET',frame)
-    # quit on ESC
-    if cv2.waitKey(1) & 0xFF == 27:
-        sys.exit()
+        # DISPLAY FRAME
+        cv2.imshow('TURRET',frame)
+        # quit on ESC
+        if cv2.waitKey(1) & 0xFF == 27:
+            sys.exit()
