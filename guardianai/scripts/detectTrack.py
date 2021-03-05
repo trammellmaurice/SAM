@@ -8,6 +8,7 @@ import time
 
 import math
 import random
+import threading
 
 sys.path.remove('/opt/ros/melodic/lib/python2.7/dist-packages') # in order to import cv2 under python3
 
@@ -65,13 +66,20 @@ def detect():
         if cv2.waitKey(1) & 0xFF == 27:
             sys.exit()
 
+    global TRACK
+    TRACK = True
     return detections
+
+def kill_tracker():
+    global TRACK
+    TRACK = False
+    return
 
 """
 SETUP
 """
 ENGAGE_TIME = 20
-REDETECT_TIME = 100
+REDETECT_TIME = 20
 
 # SET UP CAMERA
 video = cv2.VideoCapture(0)
@@ -120,7 +128,11 @@ while video.isOpened():
     """
     PRIMARY_TARGET = 0
 
-    while video.isOpened():
+    # SET TIMER FOR REDETECTION
+    redetect_timer = threading.Timer(REDETECT_TIME,kill_tracker)
+    redetect_timer.start()
+
+    while video.isOpened() and TRACK:
         # READ NEW FRAMES
         ok, frame = video.read()
         if not ok:
