@@ -41,6 +41,7 @@ def crosshair(frame):
 
 
 def detect():
+    print('detect')
     # MAKE A BLANK LIST OF DETECTIONS
     detections = []
 
