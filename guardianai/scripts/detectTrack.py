@@ -108,7 +108,7 @@ DETECT TARGETS
 while video.isOpened():
 
     # CREATE A NEW, EMPTY MULTITRACKER
-    multiTracker = cv2.MultiTracker_create()
+    multiTracker = cv2.legacy.MultiTracker_create()
 
     # DETECT TARGETS AND RETURN LIST
     detections = detect()
@@ -118,7 +118,7 @@ while video.isOpened():
 
     # ADD ROIS TO MULTI TRACKER
     for roi in rois:
-        multiTracker.add(cv2.TrackerMOSSE_create(), frame, tuple(roi))
+        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
 
     """
     TRACK TARGETS
