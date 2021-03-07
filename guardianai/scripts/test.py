@@ -19,6 +19,6 @@ from std_msgs.msg import String
 # import jetson.utils
 
 # # set up camera (use open cv)
-# video = cv2.VideoCapture(0)
+video = cv2.VideoCapture(0)
 
-print(cv2.__version__)
+# print(cv2.__version__)
