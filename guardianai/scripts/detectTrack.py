@@ -115,7 +115,7 @@ while video.isOpened():
 
     # ADD ROIS TO MULTI TRACKER
     for detection in detections:
-        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(detection.Left,detection.Top,detection.Width,detection.Height))
+        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple((detection.Left,detection.Top,detection.Width,detection.Height)))
 
     """
     TRACK TARGETS
