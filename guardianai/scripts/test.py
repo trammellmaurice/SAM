@@ -22,10 +22,15 @@ import numpy as np
 video = cv2.VideoCapture(0)
 
 while video.isOpened():
+    # READ NEW FRAMES
+    ok, frame = video.read()
+    if not ok:
+        break
+
     # DISPLAY FRAME
     cv2.imshow('TURRET',frame)
     # quit on ESC
     if cv2.waitKey(1) & 0xFF == 27:
         sys.exit()
-        
+
 # print(cv2.__version__)
