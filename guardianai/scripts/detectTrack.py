@@ -41,7 +41,6 @@ def crosshair(frame):
 
 
 def detect():
-    print('detect')
     # MAKE A BLANK LIST OF DETECTIONS
     detections = []
 
@@ -72,6 +71,7 @@ def detect():
     return detections
 
 def kill_tracker():
+    print('kill tracker')
     global TRACK
     TRACK = False
     return

@@ -15,14 +15,10 @@ import rospy
 from std_msgs.msg import String
 
 # inference libraries
-import jetson.inference
-import jetson.utils
+# import jetson.inference
+# import jetson.utils
 
-# set up camera (use open cv)
-video = cv2.VideoCapture(0)
+# # set up camera (use open cv)
+# video = cv2.VideoCapture(0)
 
-# check if video is open
-if not video.isOpened():
-    video = cv2.VideoCapture(1)
-
-ok, frame = video.read()
+print(cv2.__version__)
