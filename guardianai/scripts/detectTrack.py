@@ -113,12 +113,9 @@ while video.isOpened():
     # DETECT TARGETS AND RETURN LIST
     detections = detect()
 
-    # CONVERT DETECTION TO REGION OF INTEREST FOR TRACKER
-    rois = [(detection.Left,detection.Top,detection.Width,detection.Height) for detection in detections]
-
     # ADD ROIS TO MULTI TRACKER
-    for roi in rois:
-        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(roi))
+    for detection in detections:
+        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple(detection.Left,detection.Top,detection.Width,detection.Height))
 
     """
     TRACK TARGETS
