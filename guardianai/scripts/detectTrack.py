@@ -67,7 +67,7 @@ def detect():
     return detections
 
 def kill_tracker():
-    print('kill tracker')
+    print('DETECT')
     global TRACK
     TRACK = False
     return
@@ -95,6 +95,7 @@ rate = rospy.Rate(75) #update at 75 hz
 
 # SET UP ROS PUBLISHERS
 commands = rospy.Publisher('autopilot_commands',String,queue_size=1)
+commands = rospy.Publisher('status',String,queue_size=1)
 
 # READ JUNK FRAMES
 for i in range(0,10):
