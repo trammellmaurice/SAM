@@ -39,6 +39,7 @@ def crosshair(frame):
 def detect():
     # MAKE A BLANK LIST OF DETECTIONS
     detections = []
+    i = False
 
     # DETECTION LOOP
     while not detections:
@@ -61,8 +62,9 @@ def detect():
         # ESCAPE TO QUIT
         if cv2.waitKey(1) & 0xFF == 27:
             sys.exit()
-        if not detections:
+        if not detections and i = False:
             status.publish('i')
+            i = True
 
     global TRACK
     TRACK = True
