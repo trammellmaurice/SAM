@@ -61,6 +61,8 @@ def detect():
         # ESCAPE TO QUIT
         if cv2.waitKey(1) & 0xFF == 27:
             sys.exit()
+        if not detections:
+            status.publish('i')
 
     global TRACK
     TRACK = True
@@ -95,7 +97,7 @@ rate = rospy.Rate(75) #update at 75 hz
 
 # SET UP ROS PUBLISHERS
 commands = rospy.Publisher('autopilot_commands',String,queue_size=1)
-commands = rospy.Publisher('status',String,queue_size=1)
+status = rospy.Publisher('status',String,queue_size=1)
 
 # READ JUNK FRAMES
 for i in range(0,10):
@@ -121,6 +123,7 @@ while video.isOpened():
     """
     TRACK TARGETS
     """
+    status.publish("a")
     PRIMARY_TARGET = 0
 
     # SET TIMER FOR REDETECTION
