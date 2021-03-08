@@ -62,7 +62,7 @@ def detect():
         # ESCAPE TO QUIT
         if cv2.waitKey(1) & 0xFF == 27:
             sys.exit()
-        if not detections and i = False:
+        if not detections and i == False:
             status.publish('i')
             i = True
 
