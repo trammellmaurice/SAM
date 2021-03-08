@@ -6,33 +6,41 @@ import subprocess
 import rospy
 from std_msgs.msg import String
 
-STATES = {'help': ['mpg321', '-l 0','/media/marsz/BE82-0E13/sad.mp3'],
-'attack': ['mpg321','-l 0', '/media/marsz/BE82-0E13/attack.mp3'],
-'idle': ['mpg321', '-l 0', '/media/marsz/BE82-0E13/idle.mp3']}
+STATES = {'help': ['mpg321', '-l 0','/media/pi/BE82-0E13/sad.mp3'],
+'attack': ['mpg321','-l 0', '/media/pi/BE82-0E13/attack.mp3'],
+'idle': ['mpg321', '-l 0', '/media/pi/BE82-0E13/idle.mp3']}
 
 last = None
+process = None 
 
 def callback(state):
-    if state == "a" and last != 'a':
+    print(state.data)
+    if state.data == "a" and last != 'a':
         if (last == 'h' or last == 'i'):
+            global process
             process.kill()
         global STATES
+        global process
         process = subprocess.Popen(STATES['attack'])
 
-    elif state == "h" and last != 'h':
+    elif state.data == "h" and last != 'h':
         if (last == 'a' or last == 'i'):
+            global process
             process.kill()
         global STATES
+        global process
         process = subprocess.Popen(STATES['help'])
 
-    elif state == "i" and last != 'i':
+    elif state.data == "i" and last != 'i':
         if (last == 'h' or last == 'a'):
+            global process
             process.kill()
         global STATES
+        global process
         process = subprocess.Popen(STATES['idle'])
 
     global last
-    last = state
+    last = state.data
 
 rospy.init_node('communicator',anonymous=True)
 rospy.Subscriber('status',String,callback)
