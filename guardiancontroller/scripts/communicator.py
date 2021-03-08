@@ -11,10 +11,20 @@ STATES = {'help': ['mpg321', '-l 0','/media/pi/BE82-0E13/sad.mp3'],
 'idle': ['mpg321', '-l 0', '/media/pi/BE82-0E13/idle.mp3']}
 
 last = None
-process = None 
+process = None
 
 def callback(state):
-    print(state.data)
+    nodes = subprocess.check_output(['rosnode','list'])
+    running = str(nodes).find('guardian_ai')
+    if running == -1 and last != 'h':
+        state.data = 'h'
+        if (last == 'a' or last == 'i'):
+            global process
+            process.kill()
+        global STATES
+        global process
+        process = subprocess.Popen(STATES['help'])
+
     if state.data == "a" and last != 'a':
         if (last == 'h' or last == 'i'):
             global process
@@ -23,13 +33,6 @@ def callback(state):
         global process
         process = subprocess.Popen(STATES['attack'])
 
-    elif state.data == "h" and last != 'h':
-        if (last == 'a' or last == 'i'):
-            global process
-            process.kill()
-        global STATES
-        global process
-        process = subprocess.Popen(STATES['help'])
 
     elif state.data == "i" and last != 'i':
         if (last == 'h' or last == 'a'):
