@@ -20,8 +20,7 @@ def callbackA(auto):
     if auto.data == "FIRE":
         rospy.loginfo("FIRE")
         GPIO.output(FIRE,GPIO.HIGH)
-        global rate
-        rate.sleep()
+        time.sleep(0.1)
         rospy.loginfo("RESET")
         GPIO.output(FIRE,GPIO.LOW)
 
