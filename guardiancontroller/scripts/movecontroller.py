@@ -8,8 +8,6 @@ import RPi.GPIO as GPIO
 
 import os
 
-MUSIC = False
-
 # pin definitions
 GPIO.setmode(GPIO.BOARD)
 
@@ -21,40 +19,31 @@ GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
 def callbackA(auto):
 
     if auto.data == "RIGHT":
-        GPIO.output(RIGHT,GPIO.HIGH)
-    elif auto.data == "RSTOP":
-        GPIO.output(RIGHT,GPIO.LOW)
-
-    if auto.data == "LEFT":
-        GPIO.output(LEFT,GPIO.HIGH)
-    elif auto.data == "LSTOP":
         GPIO.output(LEFT,GPIO.LOW)
+        GPIO.output(RIGHT,GPIO.HIGH)
+
+    elif auto.data == "LEFT":
+        GPIO.output(RIGHT,GPIO.LOW)
+        GPIO.output(LEFT,GPIO.HIGH)
 
 
     if auto.data == "UP":
-        GPIO.output(UP,GPIO.HIGH)
-    elif auto.data == "USTOP":
-        GPIO.output(UP,GPIO.LOW)
-
-    if auto.data == "DOWN":
-        GPIO.output(DOWN,GPIO.HIGH)
-    elif auto.data == "DSTOP":
         GPIO.output(DOWN,GPIO.LOW)
+        GPIO.output(UP,GPIO.HIGH)
 
+    elif auto.data == "DOWN":
+        GPIO.output(UP,GPIO.LOW)
+        GPIO.output(DOWN,GPIO.HIGH)
 
     if auto.data == "FIRE":
         GPIO.output(FIRE,GPIO.HIGH)
-        global MUSIC
-        if not MUSIC:
-            os.system('mpg321 /media/pi/BE82-0E13/*.mp3 &')
-            MUSIC = True
     elif auto.data == "FSTOP":
         GPIO.output(FIRE,GPIO.LOW)
 
     rospy.loginfo("auto %s",auto.data)
 
 
-rospy.init_node('controller',anonymous=True)
-rospy.Subscriber('auto',String,callbackA)
+rospy.init_node('movecontroller',anonymous=True)
+rospy.Subscriber('autopilot_commands',String,callbackA)
 
 rospy.spin()
