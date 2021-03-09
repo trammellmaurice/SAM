@@ -17,7 +17,9 @@ from std_msgs.msg import String
 
 # INITIALIZE ROSPY NODE
 rospy.init_node('debugger',anonymous=True)
+# SET UP ROS PUBLISHERS
 status = rospy.Publisher('status',String,queue_size=1)
+commands = rospy.Publisher('autopilot_commands',String,queue_size=1)
 rate = rospy.Rate(0.2)
 
 while not rospy.is_shutdown():
@@ -26,4 +28,6 @@ while not rospy.is_shutdown():
     if alive == -1:
         rospy.loginfo(alive)
         status.publish("h")
+        commands.publish("XSTOP")
+        commands.publish("YSTOP")
     rate.sleep()
