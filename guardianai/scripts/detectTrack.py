@@ -194,21 +194,29 @@ while video.isOpened():
             commands.publish("FIRE")
 
         # up, left = + +
-        if vx > 10:
+        if vx > 20:
             rospy.loginfo("LEFT")
             commands.publish("LEFT")
 
-        elif vx < -10:
+        elif vx < -20:
             rospy.loginfo("RIGHT")
             commands.publish("RIGHT")
 
-        if vy > 10:
+        else:
+            rospy.loginfo("XSTOP")
+            commands.publish("XSTOP")
+
+        if vy > 20:
             rospy.loginfo("UP")
             commands.publish("UP")
 
-        elif vy < -10:
+        elif vy < -20:
             rospy.loginfo("DOWN")
             commands.publish("DOWN")
+
+        else:
+            rospy.loginfo("YSTOP")
+            commands.publish("YSTOP")
 
         # DISPLAY FRAME
         cv2.imshow('TURRET',frame)
