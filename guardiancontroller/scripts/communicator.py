@@ -2,7 +2,7 @@
 
 import time
 import subprocess
-import threading 
+import threading
 
 import rospy
 from std_msgs.msg import String
@@ -45,6 +45,5 @@ def callback(state):
     last = state.data
 
 rospy.init_node('communicator',anonymous=True)
-threading.Thread(target=running).start()
 rospy.Subscriber('status',String,callback)
 rospy.spin()
