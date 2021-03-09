@@ -20,7 +20,7 @@ rospy.init_node('debugger',anonymous=True)
 # SET UP ROS PUBLISHERS
 status = rospy.Publisher('status',String,queue_size=1)
 commands = rospy.Publisher('autopilot_commands',String,queue_size=1)
-rate = rospy.Rate(0.2)
+rate = rospy.Rate(0.5)
 
 while not rospy.is_shutdown():
     process = subprocess.check_output(['rosnode','list'])
@@ -29,5 +29,6 @@ while not rospy.is_shutdown():
         rospy.loginfo(alive)
         status.publish("h")
         commands.publish("XSTOP")
+        rate.sleep()
         commands.publish("YSTOP")
-    rate.sleep()
+        rate.sleep
