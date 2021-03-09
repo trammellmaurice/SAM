@@ -35,11 +35,6 @@ def callbackA(auto):
         GPIO.output(UP,GPIO.LOW)
         GPIO.output(DOWN,GPIO.HIGH)
 
-    if auto.data == "FIRE":
-        GPIO.output(FIRE,GPIO.HIGH)
-    elif auto.data == "FSTOP":
-        GPIO.output(FIRE,GPIO.LOW)
-
     rospy.loginfo("auto %s",auto.data)
 
 
