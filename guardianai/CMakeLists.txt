@@ -162,7 +162,7 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
  catkin_install_python(PROGRAMS
-   scripts/tx.py scripts/rx.py scripts/turret.py scripts/detectTrack.py scripts/test.py
+   scripts/tx.py scripts/rx.py scripts/turret.py scripts/detectTrack.py scripts/debugger.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
