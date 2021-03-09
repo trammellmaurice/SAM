@@ -33,7 +33,7 @@ def crosshair(frame):
     cv2.line(frame, (x-10,y), (x+10,y), (0,0,255), 2)
     cv2.line(frame, (x,y-10), (x,y+10), (0,0,255), 2)
 
-    return frame
+    return frame,x,y
 
 
 def detect():
@@ -55,7 +55,7 @@ def detect():
             detections = detections[0:3]
 
         # DRAW CROSSHAIR ON FRAME
-        frame = crosshair(frame)
+        frame,trash,trash = crosshair(frame)
 
          # SHOW FRAME
         cv2.imshow('TURRET',frame)
@@ -79,8 +79,8 @@ def kill_tracker():
 """
 SETUP
 """
-ENGAGE_TIME = 20
-REDETECT_TIME = 20
+ENGAGE_TIME = 3
+REDETECT_TIME = 10
 
 # SET UP CAMERA
 video = cv2.VideoCapture(0)
@@ -126,11 +126,17 @@ while video.isOpened():
     TRACK TARGETS
     """
     status.publish("a")
-    PRIMARY_TARGET = 0
 
     # SET TIMER FOR REDETECTION
+    try:
+        redetect_timer.join()
+    except:
+        pass
     redetect_timer = threading.Timer(REDETECT_TIME,kill_tracker)
     redetect_timer.start()
+
+    PRIMARY_TARGET = 0
+    LOCK = ENGAGE_TIME
 
     while video.isOpened() and TRACK:
         # READ NEW FRAMES
@@ -138,17 +144,71 @@ while video.isOpened():
         if not ok:
             break
 
+        # PICK NEXT TARGET IF LOCK EXPIRED
+        if LOCK == 0:
+            PRIMARY_TARGET = (PRIMARY_TARGET + 1) % len(rois)
+            LOCK = ENGAGE_TIME
+
         # UPDATE TRACKERS
         ok, rois = multiTracker.update(frame)
 
         # DRAW CROSSHAIR
-        frame = crosshair(frame)
+        frame,x,y = crosshair(frame)
 
-        # GET CORNER POINTS FOR BOXES
-        for newROI in rois:
+        shoot = False
+        target = None
+
+        # DRAW TARGETS
+        for index, newROI in enumerate(rois):
             p1 = (int(newROI[0]), int(newROI[1]))
             p2 = (int(newROI[0] + newROI[2]), int(newROI[1] + newROI[3]))
-            cv2.rectangle(frame,p1,p2,(255,0,0), 2, 1)
+            if index == PRIMARY_TARGET:
+                target = (round((p1[0]+p2[0])/2),round((p1[1]+p2[1])/2))
+                # draw boxes
+                if  newROI[0] < x < newROI[0] + newROI[2] and newROI[1] < y < newROI[1] + newROI[3]:
+                    shoot = True
+                    cv2.rectangle(frame,p1,p2,(0,0,255), 2, 1)
+                    LOCK-=1
+                else:
+                    shoot = False
+                    cv2.rectangle(frame,p1,p2,(255,0,0), 2, 1)
+            else:
+                #draw dots
+                mx = round((p1[0]+p2[0])/2)
+                my = round((p1[1]+p2[1])/2)
+                radius = 5
+                color = (255,0,0)
+                thick = 2
+                frame = cv2.circle(frame, (mx,my),radius,color, thick)
+
+        """
+        CALCULATIONS AND FEEDBACK
+        """
+        # CALCULATE VECTOR
+        vx = x - target[0]
+        vy = y - target[1]
+
+        # message transmission
+        if shoot:
+            rospy.loginfo("FIRE")
+            commands.publish("FIRE")
+
+        # up, left = + +
+        if vx > 10:
+            rospy.loginfo("LEFT")
+            commands.publish("LEFT")
+
+        elif vx < -10:
+            rospy.loginfo("RIGHT")
+            commands.publish("RIGHT")
+
+        if vy > 10:
+            rospy.loginfo("UP")
+            commands.publish("UP")
+
+        elif vy < -10:
+            rospy.loginfo("DOWN")
+            commands.publish("DOWN")
 
         # DISPLAY FRAME
         cv2.imshow('TURRET',frame)
