@@ -26,6 +26,9 @@ def callbackA(auto):
         GPIO.output(RIGHT,GPIO.LOW)
         GPIO.output(LEFT,GPIO.HIGH)
 
+    elif auto.data == "XSTOP":
+        GPIO.output(RIGHT,GPIO.LOW)
+        GPIO.output(LEFT,GPIO.LOW)
 
     if auto.data == "UP":
         GPIO.output(DOWN,GPIO.LOW)
@@ -34,6 +37,10 @@ def callbackA(auto):
     elif auto.data == "DOWN":
         GPIO.output(UP,GPIO.LOW)
         GPIO.output(DOWN,GPIO.HIGH)
+
+    elif auto.data == "YSTOP":
+        GPIO.output(UP,GPIO.LOW)
+        GPIO.output(DOWN,GPIO.LOW)
 
     rospy.loginfo("auto %s",auto.data)
 
