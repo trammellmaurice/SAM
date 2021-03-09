@@ -20,7 +20,10 @@ rospy.init_node('debugger',anonymous=True)
 status = rospy.Publisher('status',String,queue_size=1)
 rate = rospy.Rate(0.2)
 
-process = subprocess.check_output(['rosnode','list'])
-alive = str(process).find('communicator')
-if not alive:
-    status.publish("h")
+while not rospy.is_shutdown():
+    process = subprocess.check_output(['rosnode','list'])
+    alive = str(process).find('guardian_ai')
+    if alive == -1:
+        rospy.loginfo(alive)
+        status.publish("h")
+    rate.sleep()
