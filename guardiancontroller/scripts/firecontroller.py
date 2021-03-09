@@ -19,11 +19,11 @@ def callbackA(auto):
 
     if auto.data == "FIRE":
         GPIO.output(FIRE,GPIO.HIGH)
+        rospy.loginfo("FIRE")
         global rate
         rate.sleep()
         GPIO.output(FIRE,GPIO.LOW)
-
-    rospy.loginfo("auto %s",auto.data)
+        rospy.loginfo("RESET")
 
 
 rospy.init_node('firecontroller',anonymous=True)
