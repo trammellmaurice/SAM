@@ -49,6 +49,16 @@ def callbackA(auto):
         GPIO.output(UP,GPIO.LOW)
         GPIO.output(DOWN,GPIO.HIGH)
 
+    elif auto.data == "SUP":
+        GPIO.output(DOWN,GPIO.LOW)
+        GPIO.output(UP,GPIO.HIGH)
+        GPIO.output(SLOW,GPIO.HIGH)
+
+    elif auto.data == "SDOWN":
+        GPIO.output(UP,GPIO.LOW)
+        GPIO.output(DOWN,GPIO.HIGH)
+        GPIO.output(SLOW,GPIO.HIGH)
+
     elif auto.data == "YSTOP":
         GPIO.output(UP,GPIO.LOW)
         GPIO.output(DOWN,GPIO.LOW)
