@@ -64,6 +64,10 @@ def detect():
             sys.exit()
         if not detections and i == False:
             status.publish('i')
+            rospy.loginfo("XSTOP")
+            commands.publish("XSTOP")
+            rospy.loginfo("YSTOP")
+            commands.publish("YSTOP")
             i = True
 
     global TRACK

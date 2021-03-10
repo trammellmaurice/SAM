@@ -12,8 +12,8 @@ import os
 GPIO.setmode(GPIO.BOARD)
 
 # set up GPIO
-ALL = [3,7,12,18,23]
-FIRE,UP,DOWN,RIGHT,LEFT = 3,7,12,18,23
+ALL = [3,7,12,18,23,32]
+FIRE,UP,DOWN,RIGHT,LEFT,SLOW = 3,7,12,18,23,32
 GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
 
 def callbackA(auto):
@@ -26,9 +26,20 @@ def callbackA(auto):
         GPIO.output(RIGHT,GPIO.LOW)
         GPIO.output(LEFT,GPIO.HIGH)
 
+    elif auto.data == "SRIGHT":
+        GPIO.output(LEFT,GPIO.LOW)
+        GPIO.output(RIGHT,GPIO.HIGH)
+        GPIO.output(SLOW,GPIO.HIGH)
+
+    elif auto.data == "SLEFT":
+        GPIO.output(RIGHT,GPIO.LOW)
+        GPIO.output(LEFT,GPIO.HIGH)
+        GPIO.output(SLOW,GPIO.HIGH)
+
     elif auto.data == "XSTOP":
         GPIO.output(RIGHT,GPIO.LOW)
         GPIO.output(LEFT,GPIO.LOW)
+
 
     if auto.data == "UP":
         GPIO.output(DOWN,GPIO.LOW)
