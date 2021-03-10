@@ -19,10 +19,12 @@ GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
 def callbackA(auto):
 
     if auto.data == "RIGHT":
+        GPIO.output(SLOW,GPIO.LOW)
         GPIO.output(LEFT,GPIO.LOW)
         GPIO.output(RIGHT,GPIO.HIGH)
 
     elif auto.data == "LEFT":
+        GPIO.output(SLOW,GPIO.LOW)
         GPIO.output(RIGHT,GPIO.LOW)
         GPIO.output(LEFT,GPIO.HIGH)
 
@@ -42,10 +44,12 @@ def callbackA(auto):
 
 
     if auto.data == "UP":
+        GPIO.output(SLOW,GPIO.LOW)
         GPIO.output(DOWN,GPIO.LOW)
         GPIO.output(UP,GPIO.HIGH)
 
     elif auto.data == "DOWN":
+        GPIO.output(SLOW,GPIO.LOW)
         GPIO.output(UP,GPIO.LOW)
         GPIO.output(DOWN,GPIO.HIGH)
 
