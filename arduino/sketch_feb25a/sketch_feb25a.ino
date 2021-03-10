@@ -38,8 +38,8 @@ int curr_pos               = 0;
 int prev_pos;
 int clockwise              = 0;  // Used to rotate continuous servos clockwise (full speed)
 int counterclockwise       = 180;// Used to rotate continuous servos counterclockwise (full speed)
-int slowclockwise          = 45;  // Used to rotate continuous servos clockwise (full speed)
-int slowcounterclockwise   = 135;// Used to rotate continuous servos counterclockwise (full speed)
+int slowclockwise          = 10;  // Used to rotate continuous servos clockwise (full speed)
+int slowcounterclockwise   = 170;// Used to rotate continuous servos counterclockwise (full speed)
 int cc_stop                = 90; // Used to stop continuous servos
 int pull                   = 130;// When trigger needs to be pulled, trigger servo moves
 int trigger_ready          = 90; // When trigger does not need to be pulled, it rests in a ready position
