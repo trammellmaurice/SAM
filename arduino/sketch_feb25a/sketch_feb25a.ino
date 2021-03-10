@@ -18,25 +18,33 @@ Servo yaw;     // Create servo object to control yaw (turret base movement) - Co
 Servo pitch;   // Create servo object to control pitch                      - Continuous Rotation Servo
 
 // Servo controller variables
-int jetson_fire       = 7;  // Pin that will read Jetson Nano "Fire" output
-int jetson_up         = 6;  // Pin that will read Jetson Nano "Up" output
-int jetson_down       = 5;  // Pin that will read Jetson Nano "Down" output
-int jetson_right      = 4;  // Pin that will read Jetson Nano "Right" output
-int jetson_left       = 3;  // Pin that will read Jetson Nano "Left" output
-int jetson_val_7      = 0;  // Value for "Fire" pin
-int jetson_val_6      = 0;  // Value for "Up" pin
-int jetson_val_5      = 0;  // Value for "Down" pin
-int jetson_val_4      = 0;  // Value for "Right" pin
-int jetson_val_3      = 0;  // Value for "Left" pin
-int curr_pos          = 0;
+
+int input_up         = 7;  // Pin that will read input Nano "Up" output
+int input_down       = 6;  // Pin that will read input Nano "Down" output
+int input_right      = 5;  // Pin that will read input Nano "Right" output
+int input_left       = 4;  // Pin that will read input Nano "Left" output
+int input_slow       = 3;  // Pin that will read input Nano "Left" output
+int input_fire       = 2;  // Pin that will read input Nano "Fire" output
+
+
+int input_val_up        = 0;  // Value for "Up" pin
+int input_val_down      = 0;  // Value for "Down" pin
+int input_val_right     = 0;  // Value for "Right" pin
+int input_val_left      = 0;  // Value for "Left" pin
+int input_val_slow      = 0;  // Value for "Slow" pin
+int input_val_fire      = 0;  // Value for "Fire" pin
+
+int curr_pos               = 0;
 int prev_pos;
-int cw                = 0;  // Used to rotate continuous servos clockwise (full speed)
-int ccw               = 180;// Used to rotate continuous servos counterclockwise (full speed)
-int cc_stop           = 90; // Used to stop continuous servos
-int pull              = 130;// When trigger needs to be pulled, trigger servo moves
-int trigger_ready     = 90; // When trigger does not need to be pulled, it rests in a ready position
-int trigger_disengage = 70; // When system is shutting down, move as far away from trigger as possible to prevent misfires
-int fire              = 0;  // Set fire equal to 1 when the trigger needs to be pulled
+int clockwise              = 0;  // Used to rotate continuous servos clockwise (full speed)
+int counterclockwise       = 180;// Used to rotate continuous servos counterclockwise (full speed)
+int slowclockwise          = 45;  // Used to rotate continuous servos clockwise (full speed)
+int slowcounterclockwise   = 135;// Used to rotate continuous servos counterclockwise (full speed)
+int cc_stop                = 90; // Used to stop continuous servos
+int pull                   = 130;// When trigger needs to be pulled, trigger servo moves
+int trigger_ready          = 90; // When trigger does not need to be pulled, it rests in a ready position
+int trigger_disengage      = 70; // When system is shutting down, move as far away from trigger as possible to prevent misfires
+int fire                   = 0;  // Set fire equal to 1 when the trigger needs to be pulled
 
 // Function prototypes
 void startup_fcn();
@@ -52,24 +60,26 @@ void setup() {
   trigger.attach(8); // Attach servo to pin 8  - Trigger Pin
   pitch.attach(9);   // Attach servo to pin 9  - Pitch
   yaw.attach(10);    // Attach servo to pin 10 - Yaw (Turret base)
-  pinMode(jetson_fire,  INPUT);
-  pinMode(jetson_up,    INPUT);
-  pinMode(jetson_down,  INPUT);
-  pinMode(jetson_right, INPUT);
-  pinMode(jetson_left,  INPUT);
+
+  pinMode(input_up,    INPUT);
+  pinMode(input_down,  INPUT);
+  pinMode(input_right, INPUT);
+  pinMode(input_left,  INPUT);
+  pinMode(input_slow,  INPUT);
+  pinMode(input_fire,  INPUT);
 }
-  
+
 // ============================================================================
 // Main Loop
 // ============================================================================
 void loop() {
-  
+
   startup_fcn();
-  
+
   while(1) {
     controller_fcn();
   }
-  
+
   shutdown_fcn(); // Once prompted to, shutdown the system
 
 }
@@ -105,40 +115,61 @@ void fire_fcn() {
 // ============================================================================
 void controller_fcn() {
 
-jetson_val_7 = digitalRead(jetson_fire);
-jetson_val_6 = digitalRead(jetson_up);
-jetson_val_5 = digitalRead(jetson_down);
-jetson_val_4 = digitalRead(jetson_right);
-jetson_val_3 = digitalRead(jetson_left);
-      
-  if (jetson_val_7 == HIGH){
+input_val_up = digitalRead(input_up);
+input_val_down = digitalRead(input_down);
+input_val_right = digitalRead(input_right);
+input_val_left = digitalRead(input_left);
+input_val_slow = digitalRead(input_slow);
+input_val_fire = digitalRead(input_fire);
+
+  if (input_val_fire == HIGH){
     fire = 1;
     fire_fcn();
   }
 
 
-  if (jetson_val_6 == HIGH){
-    pitch.write(ccw);
+  if (input_val_up == HIGH){
+    if (input_val_slow == HIGH){
+      pitch.write(slowcounterclockwise);
+    }
+    else{
+      pitch.write(counterclockwise);
+    }
   }
-  else if (jetson_val_5 == HIGH){
-    pitch.write(cw);
+  else if (input_val_down == HIGH){
+    if (input_val_slow == HIGH){
+      pitch.write(slowclockwise);
+    }
+    else{
+      pitch.write(clockwise);
+    }
   }
-  else if (jetson_val_6 == LOW && jetson_val_5 == LOW){   
+  else if (input_val_up == LOW && input_val_down == LOW){
     pitch.write(cc_stop);
   }
-  
 
-  if (jetson_val_4 == HIGH){
-    yaw.write(cw);
-  } 
-  else if (jetson_val_3 == HIGH){
-    yaw.write(ccw);
+
+  if (input_val_left == HIGH){
+    if (input_val_slow == HIGH){
+      yaw.write(slowcounterclockwise);
+    }
+    else{
+      yaw.write(counterclockwise);
+    }
   }
-  else if (jetson_val_4 == LOW && jetson_val_3 == LOW){
+  else if (input_val_right == HIGH){
+    if (input_val_slow == HIGH){
+      yaw.write(slowclockwise);
+    }
+    else{
+      yaw.write(clockwise);
+    }
+  }
+  else if (input_val_right == LOW && input_val_left == LOW){
     yaw.write(cc_stop);
   }
 }
-  
+
 // ============================================================================
 // Shutdown Function
 // ============================================================================
@@ -155,14 +186,14 @@ void shutdown_fcn() {
 // Reset Continuous Servo Position With This Code As Applicable
 // ============================================================================
 
-//pitch.write(cw);
+//pitch.write(clockwise);
 //delay(1000);
-//pitch.write(ccw);
+//pitch.write(counterclockwise);
 //delay(1000);
 //pitch.write(cc_stop);
 
-//yaw.write(cw);
+//yaw.write(clockwise);
 //delay(1000);
-//yaw.write(ccw);
+//yaw.write(counterclockwise);
 //delay(1000);
 //yaw.write(cc_stop);
