@@ -37,10 +37,10 @@ int input_val_fire      = 0;  // Value for "Fire" pin
 int curr_pos               = 0;
 int prev_pos;
 int clockwise              = 0;  // Used to rotate continuous servos clockwise (full speed)
-int counterclockwise       = 180;// Used to rotate continuous servos counterclockwise (full speed)
-int slowclockwise          = 10;  // Used to rotate continuous servos clockwise (full speed)
-int slowcounterclockwise   = 170;// Used to rotate continuous servos counterclockwise (full speed)
+int slowclockwise          = 80;  // Used to rotate continuous servos clockwise (full speed)
 int cc_stop                = 90; // Used to stop continuous servos
+int slowcounterclockwise   = 100;// Used to rotate continuous servos counterclockwise (half speed)
+int counterclockwise       = 180;// Used to rotate continuous servos counterclockwise (full speed)
 int pull                   = 130;// When trigger needs to be pulled, trigger servo moves
 int trigger_ready          = 90; // When trigger does not need to be pulled, it rests in a ready position
 int trigger_disengage      = 70; // When system is shutting down, move as far away from trigger as possible to prevent misfires
