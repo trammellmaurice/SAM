@@ -95,7 +95,7 @@ if not video.isOpened():
     sys.exit()
 
 # # SET UP DETECTION NETWORK
-net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.6)
+net = jetson.inference.detectNet("ssd-mobilenet-v2", 0.4)
 
 # INITIALIZE ROSPY NODE
 rospy.init_node('guardian_ai',anonymous=True)
