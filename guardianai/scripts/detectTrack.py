@@ -83,7 +83,7 @@ def kill_tracker():
 """
 SETUP
 """
-ENGAGE_TIME = 3
+ENGAGE_TIME = 20
 REDETECT_TIME = 10
 
 # SET UP CAMERA
