@@ -196,51 +196,41 @@ while video.isOpened():
         if shoot:
             # rospy.loginfo("FIRE")
             # commands.publish("FIRE")
-            if vx > 20:
-                rospy.loginfo("SLEFT")
-                commands.publish("SLEFT")
-            elif vx < -20:
-                rospy.loginfo("SRIGHT")
-                commands.publish("SRIGHT")
-            else:
-                rospy.loginfo("XSTOP")
-                commands.publish("XSTOP")
-            if vy > 20:
-                rospy.loginfo("SUP")
-                commands.publish("SUP")
+            pass
 
-            elif vy < -20:
-                rospy.loginfo("SDOWN")
-                commands.publish("SDOWN")
-
-            else:
-                rospy.loginfo("YSTOP")
-                commands.publish("YSTOP")
+        if 60 > vx > 20:
+            rospy.loginfo("SLEFT")
+            commands.publish("SLEFT")
+        elif -60 < vx < -20:
+            rospy.loginfo("SRIGHT")
+            commands.publish("SRIGHT")
+        # up, left = + +
+        elif vx > 60:
+            rospy.loginfo("LEFT")
+            commands.publish("LEFT")
+        elif vx < -60:
+            rospy.loginfo("RIGHT")
+            commands.publish("RIGHT")
         else:
-            # up, left = + +
-            if vx > 20:
-                rospy.loginfo("LEFT")
-                commands.publish("LEFT")
+            rospy.loginfo("XSTOP")
+            commands.publish("XSTOP")
 
-            elif vx < -20:
-                rospy.loginfo("RIGHT")
-                commands.publish("RIGHT")
 
-            else:
-                rospy.loginfo("XSTOP")
-                commands.publish("XSTOP")
-
-            if vy > 20:
-                rospy.loginfo("UP")
-                commands.publish("UP")
-
-            elif vy < -20:
-                rospy.loginfo("DOWN")
-                commands.publish("DOWN")
-
-            else:
-                rospy.loginfo("YSTOP")
-                commands.publish("YSTOP")
+        if 60 > vy > 20:
+            rospy.loginfo("SUP")
+            commands.publish("SUP")
+        elif -60 < vy < -20:
+            rospy.loginfo("SDOWN")
+            commands.publish("SDOWN")
+        elif vy > 60:
+            rospy.loginfo("UP")
+            commands.publish("UP")
+        elif vy < -60:
+            rospy.loginfo("DOWN")
+            commands.publish("DOWN")
+        else:
+            rospy.loginfo("YSTOP")
+            commands.publish("YSTOP")
 
         # DISPLAY FRAME
         cv2.imshow('TURRET',frame)
