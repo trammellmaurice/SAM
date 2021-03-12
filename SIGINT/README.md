@@ -3,7 +3,7 @@
 ## Requirements:
 
 - HackRF One SDR -
-https://greatscottgadgets.com/hackrf/one/
+> https://greatscottgadgets.com/hackrf/one/
 
 - HackRF library -
 ```
