@@ -1,6 +1,7 @@
-**# This is the signals intelligence portion of the project.**
+#This is the signals intelligence portion of the project.
 
-##**Requirements:**
+##Requirements:
+
 - HackRF One SDR -
 	https://greatscottgadgets.com/hackrf/one/
 
