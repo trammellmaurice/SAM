@@ -45,7 +45,8 @@ def detect():
     while not detections:
         # GET A FRAME
         ok, frame = video.read()
-
+        frame = cv2.resize(img,(360,240))
+        
         # CONVERT TO CUDA IMAGE FOR DETECTION
         img = jetson.utils.cudaFromNumpy(frame)
         detections = net.Detect(img) # DETECT
@@ -145,6 +146,7 @@ while video.isOpened():
     while video.isOpened() and TRACK:
         # READ NEW FRAMES
         ok, frame = video.read()
+        frame = cv2.resize(img,(360,240))
         if not ok:
             break
 
