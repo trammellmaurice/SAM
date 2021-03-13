@@ -51,8 +51,8 @@ def detect():
         img = jetson.utils.cudaFromNumpy(frame)
         detections = net.Detect(img) # DETECT
 
-        # LIMIT DETECTIONS TO 3
-        if detections and len(detections) > 3:
+        # LIMIT DETECTIONS TO 1
+        if detections and len(detections) > 1:
             detections = detections[0:3]
 
         # DRAW CROSSHAIR ON FRAME
@@ -125,7 +125,7 @@ while video.isOpened():
 
     # ADD ROIS TO MULTI TRACKER
     for detection in detections:
-        multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple((detection.Left,detection.Top,detection.Width,detection.Height)))
+        multiTracker.add(cv2.legacy.TrackerKCF_create(), frame, tuple((detection.Left,detection.Top,detection.Width,detection.Height)))
 
     """
     TRACK TARGETS
@@ -157,6 +157,9 @@ while video.isOpened():
 
         # UPDATE TRACKERS
         ok, rois = multiTracker.update(frame)
+
+        if not ok:
+            print("LOST")
 
         # DRAW CROSSHAIR
         frame,x,y = crosshair(frame)
