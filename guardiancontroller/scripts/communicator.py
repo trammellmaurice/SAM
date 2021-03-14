@@ -7,9 +7,9 @@ import threading
 import rospy
 from std_msgs.msg import String
 
-STATES = {'help': ['mpg321', '-l 0','/media/pi/BE82-0E13/sad.mp3'],
-'attack': ['mpg321','-l 0', '/media/pi/BE82-0E13/attack.mp3'],
-'idle': ['mpg321', '-l 0', '/media/pi/BE82-0E13/idle.mp3']}
+STATES = {'help': ['mpg321', '-l 0','/media/pi/8426-9703/sad.mp3],
+'attack': ['mpg321','-l 0', '/media/pi/8426-9703/attack.mp3'],
+'idle': ['mpg321', '-l 0', '/media/pi/8426-9703/idle.mp3']}
 
 last = None
 process = None

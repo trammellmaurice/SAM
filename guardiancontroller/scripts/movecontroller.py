@@ -29,6 +29,7 @@ def callbackA(auto):
         GPIO.output(LEFT,GPIO.HIGH)
 
     elif auto.data == "SRIGHT":
+        print('slow')
         GPIO.output(LEFT,GPIO.LOW)
         GPIO.output(RIGHT,GPIO.HIGH)
         GPIO.output(SLOW,GPIO.HIGH)
