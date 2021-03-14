@@ -45,6 +45,9 @@ def detect():
     while not detections:
         # GET A FRAME
         ok, frame = video.read()
+        if not ok:
+            continue
+
         frame = cv2.resize(frame,(360,240))
 
         # CONVERT TO CUDA IMAGE FOR DETECTION
@@ -53,7 +56,7 @@ def detect():
 
         # LIMIT DETECTIONS TO 1
         if detections and len(detections) > 1:
-            detections = detections[0:3]
+            detections = detections[0:1]
 
         # DRAW CROSSHAIR ON FRAME
         frame,trash,trash = crosshair(frame)
@@ -148,18 +151,24 @@ while video.isOpened():
         ok, frame = video.read()
         frame = cv2.resize(frame,(360,240))
         if not ok:
-            break
+            continue
 
-        # PICK NEXT TARGET IF LOCK EXPIRED
+        # Redetect IF LOCK EXPIRED
         if LOCK == 0:
-            PRIMARY_TARGET = (PRIMARY_TARGET + 1) % len(rois)
-            LOCK = ENGAGE_TIME
+            # PRIMARY_TARGET = (PRIMARY_TARGET + 1) % len(rois)
+            # LOCK = ENGAGE_TIME
+            redetect_timer.cancel()
+            TRACK = False
+            continue
 
         # UPDATE TRACKERS
         ok, rois = multiTracker.update(frame)
 
         if not ok:
             print("LOST")
+            redetect_timer.cancel()
+            TRACK = False
+            continue
 
         # DRAW CROSSHAIR
         frame,x,y = crosshair(frame)
@@ -219,7 +228,6 @@ while video.isOpened():
         else:
             rospy.loginfo("XSTOP")
             commands.publish("XSTOP")
-
 
         if 60 > vy > 20:
             rospy.loginfo("SUP")
