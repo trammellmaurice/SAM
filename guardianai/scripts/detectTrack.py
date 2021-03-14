@@ -128,7 +128,12 @@ while video.isOpened():
 
     # ADD ROIS TO MULTI TRACKER
     for detection in detections:
-        multiTracker.add(cv2.legacy.TrackerKCF_create(), frame, tuple((detection.Left,detection.Top,detection.Width,detection.Height)))
+        if detection.Width > 100 or detection.Height > 150:
+            print("FAST")
+            multiTracker.add(cv2.legacy.TrackerMOSSE_create(), frame, tuple((detection.Left,detection.Top,detection.Width,detection.Height)))
+        else:
+            print("SLOW")
+            multiTracker.add(cv2.legacy.TrackerKCF_create(), frame, tuple((detection.Left,detection.Top,detection.Width,detection.Height)))
 
     """
     TRACK TARGETS
