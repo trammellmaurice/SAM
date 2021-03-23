@@ -15,18 +15,18 @@ GPIO.setmode(GPIO.BOARD)
 FIRE = 3
 GPIO.setup(FIRE,GPIO.OUT,initial=GPIO.LOW)
 
-def callbackA(auto):
+def callbackT(tele):
 
-    if auto.data == "FIRE":
+    if tele.data == "FIRE":
         rospy.loginfo("FIRE")
         GPIO.output(FIRE,GPIO.HIGH)
         time.sleep(1)
         rospy.loginfo("RESET")
         GPIO.output(FIRE,GPIO.LOW)
 
-def callbackT(tele):
+def callbackA(auto):
 
-    if tele.data == "FIRE":
+    if auto.data == "FIRE":
         rospy.loginfo("FIRE")
         GPIO.output(FIRE,GPIO.HIGH)
         time.sleep(1)

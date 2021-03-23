@@ -51,7 +51,7 @@ while not rospy.is_shutdown():
                 pub.publish("RIGHT")
                 rate.sleep()
             elif event.code == "BTN_DPAD_RIGHT" and event.state == 0:
-                pub.publish("RSTOP")
+                pub.publish("XSTOP")
                 rate.sleep()
 
             elif event.code == "BTN_DPAD_LEFT" and event.state == 1:
@@ -60,7 +60,7 @@ while not rospy.is_shutdown():
                 pub.publish("LEFT")
                 rate.sleep()
             elif event.code == "BTN_DPAD_LEFT" and event.state == 0:
-                pub.publish("LSTOP")
+                pub.publish("XSTOP")
 
 
 
@@ -69,7 +69,7 @@ while not rospy.is_shutdown():
                 pub.publish("UP")
                 rate.sleep()
             elif event.code == "BTN_DPAD_UP" and event.state == 0:
-                pub.publish("USTOP")
+                pub.publish("YSTOP")
 
 
             elif event.code == "BTN_DPAD_DOWN" and event.state == 1:
@@ -77,7 +77,7 @@ while not rospy.is_shutdown():
                 pub.publish("DOWN")
                 rate.sleep()
             elif event.code == "BTN_DPAD_DOWN" and event.state == 0:
-                pub.publish("DSTOP")
+                pub.publish("YSTOP")
 
 
             elif event.code == "BTN_TR" and event.state == 1:
