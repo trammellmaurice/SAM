@@ -69,9 +69,9 @@ def detect():
         if not detections and i == False:
             status.publish('i')
             rospy.loginfo("XSTOP")
-            commands.publish("XSTOP")
+            acommands.publish("XSTOP")
             rospy.loginfo("YSTOP")
-            commands.publish("YSTOP")
+            acommands.publish("YSTOP")
             i = True
 
     global TRACK
@@ -106,7 +106,8 @@ rospy.init_node('guardian_ai',anonymous=True)
 rate = rospy.Rate(75) #update at 75 hz
 
 # SET UP ROS PUBLISHERS
-commands = rospy.Publisher('autopilot_commands',String,queue_size=1)
+acommands = rospy.Publisher('autopilot_commands',String,queue_size=1)
+tcommands = rospy.Publisher('teleop_commands',String,queue_size=1)
 status = rospy.Publisher('status',String,queue_size=1)
 
 # READ JUNK FRAMES
@@ -213,42 +214,41 @@ while video.isOpened():
 
         # message transmission
         if shoot:
-            # rospy.loginfo("FIRE")
-            # commands.publish("FIRE")
-            pass
+            rospy.loginfo("FIRE")
+            tcommands.publish("FIRE")
 
         if 60 > vx > 20:
             rospy.loginfo("SLEFT")
-            commands.publish("SLEFT")
+            acommands.publish("SLEFT")
         elif -60 < vx < -20:
             rospy.loginfo("SRIGHT")
-            commands.publish("SRIGHT")
+            acommands.publish("SRIGHT")
         # up, left = + +
         elif vx > 60:
             rospy.loginfo("LEFT")
-            commands.publish("LEFT")
+            acommands.publish("LEFT")
         elif vx < -60:
             rospy.loginfo("RIGHT")
-            commands.publish("RIGHT")
+            acommands.publish("RIGHT")
         else:
             rospy.loginfo("XSTOP")
-            commands.publish("XSTOP")
+            acommands.publish("XSTOP")
 
         if 60 > vy > 20:
             rospy.loginfo("SUP")
-            commands.publish("SUP")
+            acommands.publish("SUP")
         elif -60 < vy < -20:
             rospy.loginfo("SDOWN")
-            commands.publish("SDOWN")
+            acommands.publish("SDOWN")
         elif vy > 60:
             rospy.loginfo("UP")
-            commands.publish("UP")
+            acommands.publish("UP")
         elif vy < -60:
             rospy.loginfo("DOWN")
-            commands.publish("DOWN")
+            acommands.publish("DOWN")
         else:
             rospy.loginfo("YSTOP")
-            commands.publish("YSTOP")
+            acommands.publish("YSTOP")
 
         # DISPLAY FRAME
         cv2.imshow('TURRET',frame)

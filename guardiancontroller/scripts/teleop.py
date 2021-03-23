@@ -5,17 +5,13 @@ from inputs import get_gamepad
 import time
 import sys
 
-import rospy 
+import rospy
 from std_msgs.msg import String
 
 ARMED = False
 SAM = True
 
-
-
-
-
-pub = rospy.Publisher('teleop',String,queue_size=1)
+pub = rospy.Publisher('teleop_commands',String,queue_size=1)
 rospy.init_node('gpad',anonymous=True)
 rate= rospy.Rate(10)
 
@@ -23,7 +19,7 @@ print("SAM CONTROL")
 
 while not rospy.is_shutdown():
     events = get_gamepad()
-    
+
     for event in events:
         if event.code == "BTN_TL2" and event.state == 1:
             SAM = False
@@ -59,13 +55,13 @@ while not rospy.is_shutdown():
                 rate.sleep()
 
             elif event.code == "BTN_DPAD_LEFT" and event.state == 1:
-                
+
                 rospy.loginfo("LEFT")
                 pub.publish("LEFT")
                 rate.sleep()
             elif event.code == "BTN_DPAD_LEFT" and event.state == 0:
                 pub.publish("LSTOP")
-                
+
 
 
             elif event.code == "BTN_DPAD_UP" and event.state == 1:
@@ -96,6 +92,3 @@ while not rospy.is_shutdown():
 
             elif event.code == "BTN_TR" and event.state == 0:
                 pub.publish("FSTOP")
- 
-
-    

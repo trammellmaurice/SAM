@@ -12,9 +12,12 @@ import os
 GPIO.setmode(GPIO.BOARD)
 
 # set up GPIO
-ALL = [3,7,12,18,23,32]
-FIRE,UP,DOWN,RIGHT,LEFT,SLOW = 3,7,12,18,23,32
+ALL = [7,12,18,23,32]
+UP,DOWN,RIGHT,LEFT,SLOW = 7,12,18,23,32
 GPIO.setup(ALL,GPIO.OUT,initial=GPIO.LOW)
+
+def callbackT(auto):
+    pass
 
 def callbackA(auto):
 
@@ -72,6 +75,7 @@ def callbackA(auto):
 
 
 rospy.init_node('movecontroller',anonymous=True)
+rospy.Subscriber('teleop_commands',String,callbackT)
 rospy.Subscriber('autopilot_commands',String,callbackA)
 
 rospy.spin()
