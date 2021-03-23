@@ -1,4 +1,4 @@
-# This is the signals intelligence portion of the project.
+# This is the signals portion of the project.
 
 ## Requirements:
 
