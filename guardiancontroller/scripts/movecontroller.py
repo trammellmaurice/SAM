@@ -56,8 +56,6 @@ def callbackT(tele):
             GPIO.output(UP,GPIO.LOW)
             GPIO.output(DOWN,GPIO.LOW)
 
-
-
 def callbackA(auto):
     global SAM
     if SAM:
