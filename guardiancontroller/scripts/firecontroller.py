@@ -12,26 +12,25 @@ import os
 GPIO.setmode(GPIO.BOARD)
 
 # set up GPIO
-FIRE = 3
+FIRE = 37
 GPIO.setup(FIRE,GPIO.OUT,initial=GPIO.LOW)
 
 def callbackT(tele):
+rospy.loginfo("RESET")
+GPIO.output(FIRE,GPIO.LOW)
 
     if tele.data == "FIRE":
         rospy.loginfo("FIRE")
         GPIO.output(FIRE,GPIO.HIGH)
-        time.sleep(1)
-        rospy.loginfo("RESET")
-        GPIO.output(FIRE,GPIO.LOW)
 
 def callbackA(auto):
+rospy.loginfo("RESET")
+GPIO.output(FIRE,GPIO.LOW)
 
     if auto.data == "FIRE":
         rospy.loginfo("FIRE")
         GPIO.output(FIRE,GPIO.HIGH)
-        time.sleep(1)
-        rospy.loginfo("RESET")
-        GPIO.output(FIRE,GPIO.LOW)
+
 
 rospy.init_node('firecontroller',anonymous=True)
 rate = rospy.Rate(0.5)

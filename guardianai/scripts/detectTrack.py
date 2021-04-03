@@ -107,7 +107,6 @@ rate = rospy.Rate(75) #update at 75 hz
 
 # SET UP ROS PUBLISHERS
 acommands = rospy.Publisher('autopilot_commands',String,queue_size=1)
-tcommands = rospy.Publisher('teleop_commands',String,queue_size=1)
 status = rospy.Publisher('status',String,queue_size=1)
 
 # READ JUNK FRAMES
@@ -215,7 +214,7 @@ while video.isOpened():
         # message transmission
         if shoot:
             rospy.loginfo("FIRE")
-            tcommands.publish("FIRE")
+            acommands.publish("FIRE")
 
         if 60 > vx > 20:
             rospy.loginfo("SLEFT")
